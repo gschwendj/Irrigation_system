@@ -25,4 +25,4 @@ class Level_alarm:
         self.empty_indicator_led.off()
 
     def level_status(self) -> bool:
-        return self.level_sensor.value
+        return bool(self.level_sensor.value)

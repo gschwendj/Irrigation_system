@@ -14,18 +14,18 @@ class Pump_control:
 
     def status(self) -> bool:
         logging.debug("Pump value is: {}".format(self.pump_output.value))
-        return self.pump_output.value
+        return bool(self.pump_output.value)
 
     def start(self) -> bool:
         # check that tank is not empty
         if self.level_sensor.value == True:
             self.pump_output.on()
         logging.debug("Pump value is: {}".format(self.pump_output.value))
-        return self.pump_output.value
+        return bool(self.pump_output.value)
 
     def stop(self) -> None:
-        logging.debug("Pump value is: {}".format(self.pump_output.value))
         self.pump_output.off()
+        logging.debug("Pump value is: {}".format(self.pump_output.value))
 
     def irrigation(self, litre: int) -> None:
         if self.start():
