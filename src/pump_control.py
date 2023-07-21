@@ -30,7 +30,7 @@ class Pump_control:
     def irrigation(self, litre: int) -> None:
         if self.start():
             logging.debug(
-                "pump is pumping for {} seconds / {} litre".format(
+                "pump is pumping for {:.2f} seconds / {} litre".format(
                     litre / 0.1125, litre
                 )
             )
