@@ -25,5 +25,5 @@ class Pump_control:
 
     def irrigation(self, litre: int) -> None:
         self.start()
-        sleep(60)  # here we need a translation from litters to time
+        sleep(litre / 0.1125)
         self.stop()
