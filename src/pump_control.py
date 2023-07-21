@@ -1,5 +1,6 @@
 from gpiozero import DigitalOutputDevice, DigitalInputDevice
 from time import sleep
+import logging
 
 
 class Pump_control:
@@ -12,18 +13,26 @@ class Pump_control:
         self.level_sensor = level_sensor
 
     def status(self) -> bool:
+        logging.debug("Pump value is: {}".format(self.pump_output.value))
         return self.pump_output.value
 
     def start(self) -> bool:
         # check that tank is not empty
         if self.level_sensor.value == True:
             self.pump_output.on()
+        logging.debug("Pump value is: {}".format(self.pump_output.value))
         return self.pump_output.value
 
     def stop(self) -> None:
+        logging.debug("Pump value is: {}".format(self.pump_output.value))
         self.pump_output.off()
 
     def irrigation(self, litre: int) -> None:
-        self.start()
-        sleep(litre / 0.1125)
-        self.stop()
+        if self.start():
+            logging.debug(
+                "pump is pumping for {} seconds / {} litre".format(
+                    litre / 0.1125, litre
+                )
+            )
+            sleep(litre / 0.1125)
+            self.stop()

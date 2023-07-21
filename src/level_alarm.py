@@ -21,6 +21,7 @@ class Level_alarm:
         self.pump_output.off()
 
     def __tank_not_empty(self) -> None:
+        logging.info("Tank is not Empty")
         self.empty_indicator_led.off()
 
     def level_status(self) -> bool:
