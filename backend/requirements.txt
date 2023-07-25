@@ -1,0 +1,4 @@
+colorzero==2.0
+gpiozero==1.6.2
+schedule==1.2.0
+rpi.gpio==0.7.1
