@@ -47,12 +47,20 @@ if __name__ == "__main__":
                 case "status":
                     answer = json.dumps(
                         {
+                            "http_code": 200,
                             "pump_status": pump_control.status(),
                             "water_level_status": level_alarm.status(),
                         }
                     )
                     sock.sendto(answer.encode(), addr)
-                case "start":
-                    pass
-        except KeyError:
+                case "start_irrigation":
+                    answer = json.dumps({"http_code": 200})
+                    sock.sendto(answer.encode, addr)
+                    pump_control.irrigation(data["pump_volume"])
+                case "set_pump_volume":
+                    pump_control.set_pump_volume(data["pump_volume"])
+                    answer = json.dumps({{"http_code": 200}})
+
+        except KeyError as e:
             logging.error("command has wrong format")
+            answer = json.dumps({"http_code": 400, "msg": e})
