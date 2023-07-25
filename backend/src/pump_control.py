@@ -32,12 +32,14 @@ class Pump_control:
         self.pump_output.off()
         logging.debug("Pump value is: {}".format(self.pump_output.value))
 
-    def irrigation(self) -> None:
+    def irrigation(self, pump_volume: int = None) -> None:
+        if pump_volume == None:
+            pump_volume = self.pump_volume
         if self.start():
             logging.debug(
                 "pump is pumping for {:.2f} seconds / {} litre".format(
-                    self.pump_volume / 0.1125, self.pump_volume
+                    pump_volume / 0.1125, pump_volume
                 )
             )
-            sleep(self.pump_volume / 0.1125)
+            sleep(pump_volume / 0.1125)
             self.stop()
