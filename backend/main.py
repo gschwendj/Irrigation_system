@@ -31,7 +31,6 @@ if __name__ == "__main__":
 
     pump_control = Pump_control(pump_out, level_alarm_in, 10)
     level_alarm = Level_alarm(level_alarm_in, indicator_led__out, pump_out)
-    irrigation_time = "20:00"
 
     logging.basicConfig(level=logging.DEBUG)
 
