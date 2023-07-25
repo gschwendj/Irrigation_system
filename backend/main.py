@@ -12,10 +12,12 @@ import schedule
 from src.level_alarm import Level_alarm
 from src.pump_control import Pump_control
 
+
 def schedule_loop():
     while True:
         schedule.run_pending()
         sleep(3600)
+
 
 if __name__ == "__main__":
     udp_ip = "127.0.0.1"
@@ -42,12 +44,16 @@ if __name__ == "__main__":
         bit_string, addr = sock.recvfrom(1024)
         data = json.loads(bit_string)
         try:
-            match data['command']:
-                case 'status':
-                    answer = json.dumps({"pump_status":pump_control.status(), 
-                                         'water_level_status':level_alarm.status()})
+            match data["command"]:
+                case "status":
+                    answer = json.dumps(
+                        {
+                            "pump_status": pump_control.status(),
+                            "water_level_status": level_alarm.status(),
+                        }
+                    )
                     sock.sendto(answer.encode(), addr)
                 case "start":
                     pass
         except KeyError:
-            logging.error('command has wrong format')
+            logging.error("command has wrong format")
