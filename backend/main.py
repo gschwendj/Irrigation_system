@@ -20,10 +20,8 @@ def schedule_loop():
 
 
 if __name__ == "__main__":
-    udp_ip = "127.0.0.1"
-    udp_port = 5005
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind((udp_ip, udp_port))
+    host = "127.0.0.1"
+    port = 5005
 
     pump_out = DigitalOutputDevice(5)
     indicator_led__out = LED(6)
@@ -40,27 +38,33 @@ if __name__ == "__main__":
     schedule_thread.start()
 
     while True:
-        bit_string, addr = sock.recvfrom(1024)
-        data = json.loads(bit_string)
-        try:
-            match data["command"]:
-                case "status":
-                    answer = json.dumps(
-                        {
-                            "http_code": 200,
-                            "pump_status": pump_control.status(),
-                            "water_level_status": level_alarm.status(),
-                        }
-                    )
-                    sock.sendto(answer.encode(), addr)
-                case "start_irrigation":
-                    answer = json.dumps({"http_code": 200})
-                    sock.sendto(answer.encode, addr)
-                    pump_control.irrigation(data["pump_volume"])
-                case "set_pump_volume":
-                    pump_control.set_pump_volume(data["pump_volume"])
-                    answer = json.dumps({{"http_code": 200}})
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind((host, port))
+            s.listen()
+            conn, addr = s.accept()
+            with conn:
+                data = json.loads(conn.recv(1024))
 
-        except KeyError as e:
-            logging.error("command has wrong format")
-            answer = json.dumps({"http_code": 400, "msg": e})
+                try:
+                    match data["command"]:
+                        case "status":
+                            answer = json.dumps(
+                                {
+                                    "http_code": 200,
+                                    "pump_status": pump_control.status(),
+                                    "water_level_status": level_alarm.status(),
+                                }
+                            )
+                            conn.sendall(answer.encode())
+                        case "start_irrigation":
+                            answer = json.dumps({"http_code": 200})
+                            conn.sendall(answer.encode)
+                            pump_control.irrigation(data["pump_volume"])
+                        case "set_pump_volume":
+                            pump_control.set_pump_volume(data["pump_volume"])
+                            answer = json.dumps({{"http_code": 200}})
+                            conn.sendall(answer.encode())
+
+                except KeyError as e:
+                    logging.error("command has wrong format")
+                    answer = json.dumps({"http_code": 400, "msg": e})
