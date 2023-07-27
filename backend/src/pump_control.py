@@ -1,6 +1,8 @@
-from gpiozero import DigitalOutputDevice, DigitalInputDevice
+from collections.abc import Callable, Iterable, Mapping
 from time import sleep
 import logging
+import threading
+from gpiozero import DigitalOutputDevice, DigitalInputDevice
 
 
 class Pump_control:
@@ -13,6 +15,16 @@ class Pump_control:
         self.pump_output = water_pump
         self.level_sensor = level_sensor
         self.pump_volume = pump_volume
+
+    def __irrigation_Thread_function(self):
+        if self.start():
+            logging.debug(
+                "pump is pumping for {:.2f} seconds / {} litre".format(
+                    self.pump_volume / 0.1125, self.pump_volume
+                )
+            )
+            sleep(self.pump_volume / 0.1125)
+            self.stop()
 
     def status(self) -> bool:
         logging.debug("Pump value is: {}".format(self.pump_output.value))
@@ -32,14 +44,10 @@ class Pump_control:
         self.pump_output.off()
         logging.debug("Pump value is: {}".format(self.pump_output.value))
 
-    def irrigation(self, pump_volume: int = None) -> None:
-        if pump_volume == None:
-            pump_volume = self.pump_volume
-        if self.start():
-            logging.debug(
-                "pump is pumping for {:.2f} seconds / {} litre".format(
-                    pump_volume / 0.1125, pump_volume
-                )
-            )
-            sleep(pump_volume / 0.1125)
-            self.stop()
+    def irrigation(self) -> bool:
+        if self.status() == False:  # if pump is already running we dont run it again
+            threading.Thread(
+                target=self.__irrigation_Thread_function, daemon=True
+            ).start()
+            return True
+        return False
