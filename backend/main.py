@@ -1,22 +1,10 @@
 import logging
-import threading
 import socket
 import json
-from time import sleep
-
-
 from gpiozero import LED, DigitalInputDevice, DigitalOutputDevice
-import schedule
-
 
 from src.level_alarm import Level_alarm
 from src.pump_control import Pump_control
-
-
-# def schedule_loop():
-#     while True:
-#         schedule.run_pending()
-#         sleep(3600)
 
 
 if __name__ == "__main__":
@@ -35,14 +23,7 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.DEBUG)
 
-    # schedule.every().day.at("20:00").do(pump_control.irrigation)
-
-    # schedule_thread = threading.Thread(target=schedule_loop, daemon=True)
-    # schedule_thread.start()
-
     while True:
-        # schedule.run_pending()
-        # sleep(1)
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             s.bind((host, port))
