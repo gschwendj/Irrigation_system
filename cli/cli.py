@@ -34,10 +34,10 @@ def main():
 
     args = parser.parse_args()
     if args.volume != None:
-        send_cmd = json.dumps({"command": "set pump volume", "volume": args.volume})
+        send_cmd = json.dumps({"command": "set_pump_volume", "volume": args.volume})
         print(f"Set pump volume to {args.volume} litres")
     elif args.start:
-        send_cmd = json.dumps({"command": "start"})
+        send_cmd = json.dumps({"command": "start_irrigation"})
         print("start irrigation process")
     elif args.status:
         send_cmd = json.dumps({"command": "status"})
