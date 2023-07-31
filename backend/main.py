@@ -26,9 +26,12 @@ if __name__ == "__main__":
     pump_out = DigitalOutputDevice(5)
     indicator_led__out = LED(6)
     level_alarm_in = DigitalInputDevice(4, bounce_time=0.1)
+    start_button = DigitalInputDevice(22, bounce_time=0.1)
 
     pump_control = Pump_control(pump_out, level_alarm_in, 10)
     level_alarm = Level_alarm(level_alarm_in, indicator_led__out, pump_out)
+
+    start_button.when_activated = pump_control.irrigation
 
     logging.basicConfig(level=logging.DEBUG)
 
