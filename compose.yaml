@@ -8,20 +8,21 @@ services:
         target: /app
     devices:
       - /dev/gpiomem:/dev/gpiomem
+    privileged: true
     ports:
       - "5000:5000"
     networks:
       - irrigation_network
-  cli:
-    build: ./cli
-    depends_on:
-      - backend
-    volumes:
-      - type: bind
-        source: ./cli
-        target: /app
-    networks:
-      - irrigation_network
+  # cli:
+  #   build: ./cli
+  #   depends_on:
+  #     - backend
+  #   volumes:
+  #     - type: bind
+  #       source: ./cli
+  #       target: /app
+  #   networks:
+  #     - irrigation_network
 
 networks:
   irrigation_network:
