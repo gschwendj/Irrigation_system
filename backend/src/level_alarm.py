@@ -24,5 +24,5 @@ class Level_alarm:
         logging.info("Tank is not Empty")
         self.empty_indicator_led.off()
 
-    def level_status(self) -> bool:
+    def status(self) -> bool:
         return bool(self.level_sensor.value)
