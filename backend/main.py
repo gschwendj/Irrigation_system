@@ -49,6 +49,10 @@ if __name__ == "__main__":
                             pump_control.set_pump_volume(data["volume"])
                             answer = json.dumps({"http_code": 200})
                             conn.sendall(answer.encode())
+                        case "reset_level_alarm":
+                            level_alarm.reset_empty_tank()
+                            answer = json.dumps({"http_code": 200})
+                            conn.sendall(answer.encode())
 
                 except KeyError as e:
                     logging.error("command has wrong format")
