@@ -1,5 +1,5 @@
-from gpiozero import DigitalInputDevice, LED, DigitalOutputDevice
 import logging
+from gpiozero import DigitalInputDevice, LED, DigitalOutputDevice
 
 
 class Level_alarm:
@@ -13,16 +13,16 @@ class Level_alarm:
         self.level_sensor = level_sensor
         self.empty_indicator_led = level_indicator_led
         self.level_sensor.when_deactivated = self.__tank_empty
-        self.level_sensor.when_activated = self.__tank_not_empty
 
     def __tank_empty(self) -> None:
         logging.info("Tank is Empty")
         self.empty_indicator_led.on()
         self.pump_output.off()
 
-    def __tank_not_empty(self) -> None:
-        logging.info("Tank is not Empty")
-        self.empty_indicator_led.off()
+    def reset_empty_tank(self) -> None:
+        if self.level_sensor.value == 1:
+            logging.info("Tank is Full")
+            self.empty_indicator_led.off()
 
     def status(self) -> bool:
-        return bool(self.level_sensor.value)
+        return bool(self.empty_indicator_led.value)
