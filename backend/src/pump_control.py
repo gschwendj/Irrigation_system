@@ -49,11 +49,7 @@ class Pump_control:
     def start(self) -> bool:
         # check that tank is not empty
         if self.level_alarm.status() == False:
-            logging.debug("pump on")
-            logging.debug(self.level_alarm.status())
             self.pump_output.on()
-        logging.debug("pump not on")
-        logging.debug(self.level_alarm.status())
         logging.debug("Pump value is: {}".format(self.pump_output.value))
         return bool(self.pump_output.value)
 
